@@ -7,7 +7,10 @@
 
 #[derive(Debug)]
 enum Message {
-    // TODO: define the different variants used below
+    Move { x: u32, y: u32 },  // 需要添加 x 和 y 字段
+    Echo(String),
+    ChangeColor(u32, u32,u32),
+    Quit,
 }
 
 impl Message {
