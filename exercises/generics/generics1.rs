@@ -7,6 +7,8 @@
 // hint.
 
 fn main() {
-    let mut shopping_list: Vec<&str> = Vec::new();
+    let mut shopping_list: Vec<&'static str> = Vec::new();
+    // 可以写成 static
+    // let mut shopping_list: Vec<&str> = Vec::new();
     shopping_list.push("milk");
 }
