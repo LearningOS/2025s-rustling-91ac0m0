@@ -1,8 +1,7 @@
 /*
-	graph
-	This problem requires you to implement a basic graph functio
+    graph
+    This problem requires you to implement a basic graph functio
 */
-// I AM NOT DONE
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
@@ -29,7 +28,23 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        println!("111111111111111111");
+
+        let (p, q, e) = edge;
+        if !self.contains(p) {
+            println!("1111111");
+            self.add_node(p);
+        }
+        if !self.contains(q) {
+            self.add_node(q);
+        }
+        if let Some(v) = self.adjacency_table_mutable().get_mut(p) {
+            println!("1111");
+            v.push((q.to_string(), e))
+        }
+        if let Some(v) = self.adjacency_table_mutable().get_mut(q) {
+            v.push((p.to_string(), e))
+        }
     }
 }
 pub trait Graph {
@@ -37,11 +52,21 @@ pub trait Graph {
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
-        //TODO
-		true
+        self.adjacency_table_mutable()
+            .insert(node.to_string(), vec![]);
+        true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (p, q, e) = edge;
+        if !self.contains(p) {
+            self.add_node(p);
+        }
+        if !self.contains(q) {
+            self.add_node(q);
+        }
+        if let Some(v) = self.adjacency_table_mutable().get_mut(p) {
+            v.push((q.to_string(), e))
+        }
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
@@ -68,6 +93,7 @@ mod test_undirected_graph {
         let mut graph = UndirectedGraph::new();
         graph.add_edge(("a", "b", 5));
         graph.add_edge(("b", "c", 10));
+
         graph.add_edge(("c", "a", 7));
         let expected_edges = [
             (&String::from("a"), &String::from("b"), 5),
@@ -77,6 +103,10 @@ mod test_undirected_graph {
             (&String::from("b"), &String::from("c"), 10),
             (&String::from("c"), &String::from("b"), 10),
         ];
+        for edge in graph.edges() {
+            println!("{:?}", edge);
+        }
+
         for edge in expected_edges.iter() {
             assert_eq!(graph.edges().contains(edge), true);
         }

@@ -1,8 +1,7 @@
 /*
-	heap
-	This question requires you to implement a binary heap function
+    heap
+    This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,13 +36,24 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+        let mut idx = self.count;
+        while idx != 1 {
+            let parent = self.parent_idx(idx);
+            if (self.comparator)(&self.items[idx], &self.items[parent]) {
+                self.items.swap(idx, parent);
+                idx = parent;
+            } else {
+                break;
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
         idx / 2
     }
-
+    // idx start with 0
     fn children_present(&self, idx: usize) -> bool {
         self.left_child_idx(idx) <= self.count
     }
@@ -57,9 +67,24 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        if self.right_child_idx(idx) > self.count {
+            self.left_child_idx(idx)
+        } else if (self.comparator)(
+            &self.items[self.left_child_idx(idx)],
+            &self.items[self.right_child_idx(idx)],
+        ) {
+            self.left_child_idx(idx)
+        } else {
+            self.right_child_idx(idx)
+        }
     }
+
+    // fn test(&mut self) -> Option<T> {
+    //     //当T没有实现Copy trait时，直接通过索引访问会尝试移动元素所有权，
+    //     // 而Rust不允许直接从Vec<T>中移出元素（会导致容器状态不一致）。
+    //     let result = self.items[1];
+    //     Some(result)
+    // }
 }
 
 impl<T> Heap<T>
@@ -84,8 +109,26 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty() {
+            return None;
+        }
+
+        // 为什么不可以直接 result = self.items [1]???
+        self.items.swap(1, self.count);
+        self.count -= 1;
+        let result = self.items.pop();
+
+        let mut idx = 1;
+        while self.children_present(idx) {
+            let small_child = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[small_child], &self.items[idx]) {
+                self.items.swap(small_child, idx);
+                idx = small_child;
+            } else {
+                break;
+            }
+        }
+        result
     }
 }
 

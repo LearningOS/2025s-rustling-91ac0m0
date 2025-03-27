@@ -3,10 +3,23 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T>(array: &mut [T])
+where
+    T: Ord,
+{
+	let mut flag = true;
+    let n = array.len();
+    while flag {
+        flag = false;
+        for i in 0..n-1 {
+            if array[i] > array[i+1] {
+                flag = true;
+                array.swap(i+1, i);
+            }
+        }
+    }
+
 }
 #[cfg(test)]
 mod tests {
